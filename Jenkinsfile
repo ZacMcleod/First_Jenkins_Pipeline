@@ -13,10 +13,18 @@ pipeline {
     }
 
     stage('Docker') {
+      
       steps {
+
+        script {
+          def dockerTool = tool name: 'docker-latest-tool', type: 'org.jenkinsci.plugins.commons.tools.DockerTool'
+          env.PATH = "${dockerTool}/bin:${env.PATH}"
+        }
+        
         withCredentials([usernamePassword(credentialsId: 'personal-docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
           sh "echo ${DOCKER_USERNAME}"
         }
+        sh "docker --version"
       }
     }
   }
